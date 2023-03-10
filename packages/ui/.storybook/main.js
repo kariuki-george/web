@@ -1,29 +1,20 @@
 module.exports = {
   stories: [
-    "../stories/**/*.stories.mdx",
-    "../stories/**/*.stories.@(js|jsx|ts|tsx)",
+    "../components/**/*.stories.mdx",
+    "../components/**/*.stories.@(js|jsx|ts|tsx)",
   ],
   staticDirs: ["../images"],
-  webpackFinal: (config) => {
-    // Default rule for images /\.(svg|ico|jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|cur|ani|pdf)(\?.*)?$/
-    const fileLoaderRule = config.module.rules.find(
-      (rule) => rule.test && rule.test.test(".svg")
-    );
-    fileLoaderRule.exclude = /\.svg$/;
-
-    config.module.rules.push({
-      test: /\.svg$/,
-      enforce: "pre",
-      loader: require.resolve("@svgr/webpack"),
-    });
-
-    return config;
-  },
+  framework: "@storybook/react",
   addons: [
+    "@storybook/addon-interactions",
     "@storybook/addon-links",
     "@storybook/addon-essentials",
     "@storybook/addon-a11y",
     {
+      /**
+       * Fix Storybook issue with PostCSS@8
+       * @see https://github.com/storybookjs/storybook/issues/12668#issuecomment-773958085
+       */
       name: "@storybook/addon-postcss",
       options: {
         postcssLoaderOptions: {
@@ -32,9 +23,7 @@ module.exports = {
       },
     },
   ],
-  framework: "@storybook/react",
   core: {
     builder: "webpack5",
   },
-  typescript: { reactDocgen: false },
 };
